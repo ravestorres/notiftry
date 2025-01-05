@@ -1,33 +1,4 @@
-<?php $user = current_user();
-$low_stock_count = count_low_stock_items(5); // Get the number of items with stock less than 5$low_stock_count = count_low_stock_items(5); // Get the number of items with stock less than 5
-
-
-include 'config.php';
-$threshold = 10; // Set your threshold for low stock
-$query = "SELECT * FROM products WHERE quantity < ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("i", $threshold);
-$stmt->execute();
-$result = $stmt->get_result();
-
-// Check if there are any products with low stock
-$lowStockProducts = [];
-while ($row = $result->fetch_assoc()) {
-    $lowStockProducts[] = $row;
-
-
-    
-}
-?>
-
-<!-- Loop through products with low stock -->
-<?php foreach ($lowStockProducts as $product): ?>
-    <div id="product-<?php echo $product['id']; ?>" class="product-item">
-        <h3><?php echo $product['name']; ?></h3>
-        <p>Stock: <?php echo $product['quantity']; ?></p>
-    </div>
-<?php endforeach; ?>
-
+<?php $user = current_user(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,45 +28,20 @@ while ($row = $result->fetch_assoc()) {
       display: flex;
       align-items: center;
     }
-    #notification-bar {
-      display: flex;
-      align-items: center;
-      margin-right: 15px;
-      position: relative;
-    }
     #notification-icon {
+      position: relative;
       margin-right: 15px; /* Space between notification and profile */
-      font-size: 1.5rem;
     }
     #notification-count {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background-color: red;
-  color: white;
-  padding: 3px 6px; /* Smaller padding */
-  border-radius: 50%;
-  font-size: 10px; /* Smaller font size */
-}
-
-#notification-count:empty {
-  display: none; /* Hide the notification if count is 0 */
-
-}
-  .product-item {
-    padding: 10px;
-    margin: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-
-.product-item:hover {
-    background-color: #f1f1f1;
-    cursor: pointer;
-}
-
-
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background-color: red;
+      color: white;
+      padding: 5px;
+      border-radius: 50%;
+      font-size: 12px;
+    }
   </style>
 </head>
 <body>
@@ -108,12 +54,15 @@ while ($row = $result->fetch_assoc()) {
         <div class="header-date">
           <strong><?php echo date("F j, Y, g:i a"); ?></strong>
         </div>
+        
+        <!-- Notification icon moved to the left -->
+        <div class="navbar-left">
+  <a id="notification-icon" class="btn btn-outline-info">
+    <span class="bi bi-bell"></span>
+    <span id="notification-count" class="badge badge-danger" style="display: none;">1</span>
+  </a>
+</div>
 
-  <!-- Notification bar -->
-  <div id="notification-bar" class="navbar-right">
-      <i id="notification-icon" class="bi bi-bell"></i>
-      <span id="notification-count"><?php echo $low_stock_count; ?></span> <!-- Show low stock count -->
-    </div>
         <!-- Profile dropdown remains on the right -->
         <div class="dropdown ms-auto">
           <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -148,5 +97,18 @@ while ($row = $result->fetch_assoc()) {
       <!-- Page Content -->
     </div>
   </div>
+
+  <script>
+    // Update notification count (this is just an example, replace with actual logic)
+    document.addEventListener("DOMContentLoaded", function() {
+      const notificationCount = document.getElementById('notification-count');
+      const notifications = 3; // Example value, replace with actual notification count
+
+      if (notifications > 0) {
+        notificationCount.textContent = notifications;
+        notificationCount.style.display = 'inline-block';
+      }
+    });
+  </script>
 </body>
 </html>
