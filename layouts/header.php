@@ -97,18 +97,27 @@
       <!-- Page Content -->
     </div>
   </div>
-
   <script>
-    // Update notification count (this is just an example, replace with actual logic)
-    document.addEventListener("DOMContentLoaded", function() {
-      const notificationCount = document.getElementById('notification-count');
-      const notifications = 3; // Example value, replace with actual notification count
+document.addEventListener("DOMContentLoaded", function () {
+  const notificationCount = document.getElementById("notification-count");
 
-      if (notifications > 0) {
-        notificationCount.textContent = notifications;
-        notificationCount.style.display = 'inline-block';
+  // Fetch low stock count
+  fetch("low_stock_count.php")
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.count > 0) {
+        notificationCount.textContent = data.count;
+        notificationCount.style.display = "inline-block";
       }
-    });
-  </script>
+    })
+    .catch((error) => console.error("Error fetching low stock count:", error));
+
+  // Notification click handler
+  document.getElementById("notification-icon").addEventListener("click", () => {
+    window.location.href = "low_stocks.php";
+  });
+});
+</script>
+
 </body>
 </html>

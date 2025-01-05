@@ -452,7 +452,7 @@ function find_product_by_id($product_id) {
 /*--------------------------------------------------------------*/
 /* Function to get low stock items count */
 /*--------------------------------------------------------------*/
-function count_low_stock_items($threshold = 5) {
+function count_low_stock_items($threshold = 250) {
   global $db;
   $sql = "SELECT COUNT(id) AS low_stock_count FROM products WHERE quantity < {$db->escape($threshold)}";
   $result = $db->query($sql);
