@@ -55,20 +55,48 @@
           <strong><?php echo date("F j, Y, g:i a"); ?></strong>
         </div>
         
-        <!-- Notification icon moved to the left -->
-        <div class="navbar-left">
-  <a id="notification-icon" class="btn btn-outline-info">
-    <span class="bi bi-bell"></span>
-    <span id="notification-count" class="badge badge-danger" style="display: none;">1</span>
-  </a>
-</div>
+        
+
+
+
+
+
+
 
         <!-- Profile dropdown remains on the right -->
         <div class="dropdown ms-auto">
+
+        
+        <a id="notification-icon" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#lowStockModal">
+  <span class="bi bi-bell"></span>
+  <span id="notification-count" class="badge badge-danger" style="display: none;">0</span>
+</a>
+
+
+
+
+
+
+
+
+
+
           <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             <img src="uploads/users/<?php echo $user['image']; ?>" alt="user-image" class="img-circle img-inline" style="width: 30px; height: 30px;">
             <?php echo remove_junk(ucfirst($user['name'])); ?>
           </button>
+
+
+
+
+
+
+
+
+
+
+
+
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="profile.php?id=<?php echo (int)$user['id']; ?>"><i class="bi bi-person"></i> Profile</a></li>
             <li><a class="dropdown-item" href="edit_account.php" title="edit account"><i class="bi bi-gear"></i> Settings</a></li>
@@ -94,7 +122,36 @@
 
   <div class="page">
     <div class="container-fluid">
+
+
+
+
+
       <!-- Page Content -->
+
+
+
+
+
+
+
+
+      <!-- Low Stock Modal -->
+<div class="modal fade" id="lowStockModal" tabindex="-1" aria-labelledby="lowStockModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="lowStockModalLabel">Low Stock Products</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="lowStockContent">
+          <!-- Low stock data will be loaded here -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
     </div>
   </div>
   <script>
@@ -112,9 +169,14 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .catch((error) => console.error("Error fetching low stock count:", error));
 
-  // Notification click handler
-  document.getElementById("notification-icon").addEventListener("click", () => {
-    window.location.href = "low_stocks.php";
+  // Fetch low stock data when modal is opened
+  document.getElementById("lowStockModal").addEventListener("show.bs.modal", function () {
+    fetch("low_stocks_modal.php")
+      .then((response) => response.text())
+      .then((html) => {
+        document.getElementById("lowStockContent").innerHTML = html;
+      })
+      .catch((error) => console.error("Error loading low stock data:", error));
   });
 });
 </script>
